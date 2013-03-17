@@ -20,7 +20,6 @@
 }
 - (void)loadItems;
 - (void)persistItems;
-- (void)syncData;
 
 - (void)styleCounterCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
 - (void)styleOptionsCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
@@ -40,10 +39,13 @@ typedef void (^ConfirmBlock)(NSInteger option);
 @interface CTCounterTableViewController () <UIActionSheetDelegate> {
     NSInteger _optionPendingConfirm;
     ConfirmBlock _blockPendingConfirm;
+    ConfirmBlock _exportBlock;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)confirmOption:(NSInteger)option withBlock:(ConfirmBlock)block;
+- (void)pickExportType;
+- (void)doExport:(NSInteger)exportType;
 @end
 
 enum {
@@ -61,6 +63,13 @@ enum {
     CTCounterView_OptionsCount
 };
 
+enum {
+    CTCounterView_JSONExportType,
+    CTCounterView_CSVExportType,
+
+    CTCounterView_ExportTypeCount
+};
+
 NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 @implementation CTCounterTableViewController
@@ -75,8 +84,14 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    if (_blockPendingConfirm) Block_release(_blockPendingConfirm);
-    _blockPendingConfirm = nil;
+    if (_blockPendingConfirm) {
+        Block_release(_blockPendingConfirm);
+        _blockPendingConfirm = nil;
+    }
+    if (_exportBlock) {
+        Block_release(_exportBlock);
+        _exportBlock = nil;
+    }
 
     [_items release];
     [_addItem release];
@@ -90,7 +105,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
     _addItem = [[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStyleBordered target:self action:@selector(addItemWasTapped:)];
     _doneItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneItemWasTapped:)];
-    
+
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     self.navigationItem.rightBarButtonItem = _addItem;
     self.navigationItem.title = @"CounterTap!";
@@ -108,10 +123,8 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     [super setEditing:editing animated:animated];
-    
+
     self.navigationItem.rightBarButtonItem.enabled = !editing;
-    
-    [self syncData];
 }
 
 #pragma mark - Internal
@@ -140,10 +153,6 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     NSData* data = [NSKeyedArchiver archivedDataWithRootObject:_items];
     [defaults setObject:data forKey:CTDefaults_ItemsKey];
     [defaults synchronize];
-}
-
-- (void)syncData {
-    
 }
 
 - (void)willEnterBackground:(id)sender {
@@ -219,6 +228,10 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             }];
             break;
 
+        case CTCounterView_OptionExport:
+            [self pickExportType];
+            break;
+
         default:
             break;
     }
@@ -249,6 +262,22 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     [sheet showFromRect:self.tableView.frame inView:self.view animated:YES];
 }
 
+- (void)pickExportType {
+    _optionPendingConfirm = CTCounterView_OptionExport;
+    UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"Export format?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"JSON", @"CSV", nil] autorelease];
+    [sheet showFromRect:self.tableView.frame inView:self.view animated:YES];
+}
+
+- (void)doExport:(NSInteger)exportType {
+    switch (exportType) {
+        case CTCounterView_JSONExportType:
+            NSLog(@"isValidJsonObject: %@", [NSJSONSerialization isValidJSONObject:_items] ? @"YES" : @"NO");
+            break;
+        case CTCounterView_CSVExportType:
+            break;
+    }
+}
+
 #pragma mark - CTTextFieldCellDelegate
 
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell {
@@ -269,6 +298,8 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
         Block_release(_blockPendingConfirm);
         _blockPendingConfirm = nil;
         _optionPendingConfirm = 0;
+    } else if (_optionPendingConfirm == CTCounterView_OptionExport) {
+        [self doExport:buttonIndex - actionSheet.firstOtherButtonIndex];
     }
 }
 
