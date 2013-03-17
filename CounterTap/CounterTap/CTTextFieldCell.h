@@ -13,6 +13,7 @@
 - (void)textFieldCellDidBeginEditing:(CTTextFieldCell*)cell;
 - (void)textFieldCellTextDidChange:(CTTextFieldCell*)cell;
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell*)cell;
+- (void)textFieldDidReturn:(CTTextFieldCell*)cell;
 @end
 
 @interface CTTextFieldCell : UITableViewCell

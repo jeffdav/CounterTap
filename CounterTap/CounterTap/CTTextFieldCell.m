@@ -8,7 +8,7 @@
 
 #import "CTTextFieldCell.h"
 
-@interface CTTextFieldCell ()
+@interface CTTextFieldCell () <UITextFieldDelegate>
 @end
 
 @implementation CTTextFieldCell
@@ -27,6 +27,7 @@
         _textField = [[[UITextField alloc] init] autorelease];
         _textField.adjustsFontSizeToFitWidth = YES;
         _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        _textField.delegate = self;
         _textField.font = [UIFont boldSystemFontOfSize:16];
         [self.contentView addSubview:_textField];
 
@@ -95,6 +96,14 @@
     if (!_alwaysEditable) {
         _textField.enabled = editing;
     }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    if ([_delegate respondsToSelector:@selector(textFieldDidReturn:)]) {
+        [_delegate textFieldDidReturn:self];
+    }
+    return NO;
 }
 
 - (void)textDidChange:(NSNotification*)notification {

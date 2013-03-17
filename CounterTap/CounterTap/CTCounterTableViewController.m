@@ -36,6 +36,7 @@
 
 @interface CTCounterTableViewController () <CTTextFieldDelegate>
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell;
+- (void)textFieldDidReturn:(CTTextFieldCell *)cell;
 @end
 
 typedef void (^ConfirmBlock)(NSInteger option);
@@ -43,13 +44,17 @@ typedef void (^ConfirmBlock)(NSInteger option);
 @interface CTCounterTableViewController () <UIActionSheetDelegate> {
     NSInteger _optionPendingConfirm;
     ConfirmBlock _blockPendingConfirm;
-    ConfirmBlock _exportBlock;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
+
 - (void)confirmOption:(NSInteger)option withBlock:(ConfirmBlock)block;
+
 - (void)pickExportType;
 - (void)doExport:(NSInteger)exportType;
+
+- (void)pickSortType;
+- (void)doSort:(NSInteger)sortType;
 @end
 
 @interface CTCounterTableViewController () <MFMailComposeViewControllerDelegate>
@@ -64,11 +69,21 @@ enum {
 };
 
 enum {
+    CTCounterView_OptionSort,
     CTCounterView_OptionExport,
     CTCounterView_OptionResetAll,
     CTCounterView_OptionRemoveAll,
 
     CTCounterView_OptionsCount
+};
+
+enum {
+    CTCounterView_TitleAscSort,
+    CTCounterView_TitleDscSort,
+    CTCounterView_CountAscSort,
+    CTCounterView_CountDscSort,
+
+    CTCounterView_SortCount
 };
 
 enum {
@@ -95,10 +110,6 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     if (_blockPendingConfirm) {
         Block_release(_blockPendingConfirm);
         _blockPendingConfirm = nil;
-    }
-    if (_exportBlock) {
-        Block_release(_exportBlock);
-        _exportBlock = nil;
     }
 
     [_items release];
@@ -167,6 +178,8 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     [self persistItems];
 }
 
+#pragma mark Cell Styling
+
 - (void)styleCounterCell:(UITableViewCell *)cell atIndex:(NSInteger)index {
     CTCounter* counter = [_items objectAtIndex:index];
     CTTextFieldCell* textfieldCell = (id)cell;
@@ -176,6 +189,9 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 - (void)styleOptionsCell:(UITableViewCell *)cell atIndex:(NSInteger)index {
     switch (index) {
+        case CTCounterView_OptionSort:
+            cell.textLabel.text = @"Sort";
+            break;
         case CTCounterView_OptionExport:
             cell.textLabel.text = @"Export";
             break;
@@ -187,6 +203,8 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             break;
     }
 }
+
+#pragma mark BarButtonItems
 
 - (void)addItemWasTapped:(id)sender {
     [self.tableView setEditing:YES animated:YES];
@@ -215,6 +233,8 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     self.navigationItem.leftBarButtonItem.enabled = YES;
 }
 
+#pragma mark Options
+
 - (void)handleOption:(NSInteger)option {
     switch (option) {
         case CTCounterView_OptionResetAll:
@@ -242,6 +262,10 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             } else {
                 [[[[UIAlertView alloc] initWithTitle:@"No e-mail configured." message:@"Export is done via e-mail. Please configure an e-mail account and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
             }
+            break;
+
+        case CTCounterView_OptionSort:
+            [self pickSortType];
             break;
 
         default:
@@ -273,6 +297,8 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:destructive otherButtonTitles:nil] autorelease];
     [sheet showFromRect:self.tableView.frame inView:self.view animated:YES];
 }
+
+#pragma mark Exporting
 
 - (void)pickExportType {
     _optionPendingConfirm = CTCounterView_OptionExport;
@@ -316,6 +342,62 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     [self presentViewController:controller animated:YES completion:^{}];
 }
 
+#pragma mark Sorting
+
+- (void)pickSortType {
+    _optionPendingConfirm = CTCounterView_OptionSort;
+    UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"Sort how?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+                                               otherButtonTitles:@"Title, Ascending", @"Title, Descending", @"Count, Ascending", @"Count, Descending", nil] autorelease];
+    [sheet showFromRect:self.tableView.frame inView:self.view animated:YES];
+}
+
+- (void)doSort:(NSInteger)sortType {
+    switch (sortType) {
+        case CTCounterView_TitleAscSort:
+            [_items sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                return [[obj1 title] compare:[obj2 title]];
+            }];
+            break;
+
+        case CTCounterView_TitleDscSort:
+            [_items sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                NSComparisonResult result = [[obj1 title] compare:[obj2 title]];
+                switch (result) {
+                    case NSOrderedAscending: return NSOrderedDescending;
+                    case NSOrderedDescending: return NSOrderedAscending;
+                    default: return result;
+                }
+            }];
+            break;
+
+        case CTCounterView_CountAscSort:
+            [_items sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                NSInteger left = [obj1 count];
+                NSInteger right = [obj2 count];
+                if (left > right) return NSOrderedDescending;
+                if (left < right) return NSOrderedAscending;
+                return NSOrderedSame;
+            }];
+            break;
+
+        case CTCounterView_CountDscSort:
+            [_items sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                NSInteger left = [obj1 count];
+                NSInteger right = [obj2 count];
+                if (left > right) return NSOrderedAscending;
+                if (left < right) return NSOrderedDescending;
+                return NSOrderedSame;
+            }];
+            break;
+
+        default:
+            break;
+    }
+
+    [self persistItems];
+    [self.tableView reloadData];
+}
+
 #pragma mark - CTTextFieldCellDelegate
 
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell {
@@ -328,7 +410,11 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     counter.title = cell.textField.text;
 }
 
-#pragma mark MFMailComposeViewControllerDelegate
+- (void)textFieldDidReturn:(CTTextFieldCell *)cell {
+    [self doneItemWasTapped:self];
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
     [self dismissViewControllerAnimated:YES completion:^{}];
@@ -344,6 +430,8 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
         _optionPendingConfirm = 0;
     } else if (_optionPendingConfirm == CTCounterView_OptionExport) {
         [self doExport:buttonIndex - actionSheet.firstOtherButtonIndex];
+    } else if (_optionPendingConfirm == CTCounterView_OptionSort) {
+        [self doSort:buttonIndex - actionSheet.firstOtherButtonIndex];
     }
 }
 
