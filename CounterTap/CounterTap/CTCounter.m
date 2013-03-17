@@ -22,7 +22,11 @@ NSString* const CTCounter_CountKey = @"CTCounterCountKey";
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"{ \"title\": \"%@\", \"count\": %d", _title, _count];
+    return [NSString stringWithFormat:@"{ \"title\": \"%@\", \"count\": %d }", _title, _count];
+}
+
+- (NSDictionary*)asDictionary {
+    return @{ @"title" : _title, @"count" : @(_count) };
 }
 
 #pragma mark - NSCoder

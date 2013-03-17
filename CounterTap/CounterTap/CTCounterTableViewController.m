@@ -8,6 +8,10 @@
 
 #import "CTCounterTableViewController.h"
 
+#import <MessageUI/MessageUI.h>
+
+#import "JSONKit.h"
+
 #import "CTCounter.h"
 #import "CTTextFieldCell.h"
 
@@ -46,6 +50,10 @@ typedef void (^ConfirmBlock)(NSInteger option);
 - (void)confirmOption:(NSInteger)option withBlock:(ConfirmBlock)block;
 - (void)pickExportType;
 - (void)doExport:(NSInteger)exportType;
+@end
+
+@interface CTCounterTableViewController () <MFMailComposeViewControllerDelegate>
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error;
 @end
 
 enum {
@@ -169,7 +177,6 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 - (void)styleOptionsCell:(UITableViewCell *)cell atIndex:(NSInteger)index {
     switch (index) {
         case CTCounterView_OptionExport:
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.textLabel.text = @"Export";
             break;
         case CTCounterView_OptionResetAll:
@@ -219,6 +226,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
                 [self.tableView reloadData];
                 [self persistItems];
             }];
+            break;
 
         case CTCounterView_OptionRemoveAll:
             [self confirmOption:option withBlock:^(NSInteger option) {
@@ -229,7 +237,11 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             break;
 
         case CTCounterView_OptionExport:
-            [self pickExportType];
+            if ([MFMailComposeViewController canSendMail]) {
+                [self pickExportType];
+            } else {
+                [[[[UIAlertView alloc] initWithTitle:@"No e-mail configured." message:@"Export is done via e-mail. Please configure an e-mail account and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
+            }
             break;
 
         default:
@@ -269,13 +281,34 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 }
 
 - (void)doExport:(NSInteger)exportType {
+    NSData* exportData = nil;
+    NSString* mimeType = nil;
+    NSString* fileName = nil;
     switch (exportType) {
-        case CTCounterView_JSONExportType:
-            NSLog(@"isValidJsonObject: %@", [NSJSONSerialization isValidJSONObject:_items] ? @"YES" : @"NO");
+        case CTCounterView_JSONExportType: {
+            __block NSMutableArray* array = [NSMutableArray arrayWithCapacity:[_items count]];
+            [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [array addObject:[obj asDictionary]];
+            }];
+            exportData = [array JSONData];
+            mimeType = @"application/json";
+            fileName = @"export.json";
             break;
+        }
+
         case CTCounterView_CSVExportType:
+            exportData = nil;  // TODO(jeff): implement.
+            mimeType = @"text/csv";
+            fileName = @"export.csv";
             break;
     }
+
+    MFMailComposeViewController* controller = [[[MFMailComposeViewController alloc] init] autorelease];
+    controller.mailComposeDelegate = self;
+    [controller setSubject:@"CounterTap Data Export"];
+    [controller setMessageBody:@"Your data is attached.  Thanks for using CounterTap." isHTML:NO];
+    [controller addAttachmentData:exportData mimeType:mimeType fileName:fileName];
+    [self presentViewController:controller animated:YES completion:^{}];
 }
 
 #pragma mark - CTTextFieldCellDelegate
@@ -288,6 +321,12 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
     CTCounter* counter = [_items objectAtIndex:path.row];
     counter.title = cell.textField.text;
+}
+
+#pragma mark MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 #pragma mark - UIActionSheetDelegate

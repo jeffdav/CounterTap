@@ -19,6 +19,8 @@
 		6AA18E4316F5187F0003124B /* CTCounterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E4216F5187F0003124B /* CTCounterTableViewController.m */; };
 		6AA18E4616F522010003124B /* CTCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E4516F522010003124B /* CTCounter.m */; };
 		6AA18E4916F533E00003124B /* CTTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E4816F533E00003124B /* CTTextFieldCell.m */; };
+		6AA18E4C16F57AA40003124B /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E4B16F57AA40003124B /* JSONKit.m */; };
+		6AA18E5016F580820003124B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA18E4F16F580820003124B /* MessageUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +43,9 @@
 		6AA18E4516F522010003124B /* CTCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTCounter.m; sourceTree = "<group>"; };
 		6AA18E4716F533E00003124B /* CTTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTTextFieldCell.h; sourceTree = "<group>"; };
 		6AA18E4816F533E00003124B /* CTTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTextFieldCell.m; sourceTree = "<group>"; };
+		6AA18E4A16F57AA40003124B /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = Vendor/JSONKit/JSONKit.h; sourceTree = "<group>"; };
+		6AA18E4B16F57AA40003124B /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = Vendor/JSONKit/JSONKit.m; sourceTree = "<group>"; };
+		6AA18E4F16F580820003124B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AA18E5016F580820003124B /* MessageUI.framework in Frameworks */,
 				6AA18E2516F517210003124B /* UIKit.framework in Frameworks */,
 				6AA18E2716F517210003124B /* Foundation.framework in Frameworks */,
 				6AA18E2916F517210003124B /* CoreGraphics.framework in Frameworks */,
@@ -60,8 +66,11 @@
 		6AA18E1816F517210003124B = {
 			isa = PBXGroup;
 			children = (
+				6AA18E4F16F580820003124B /* MessageUI.framework */,
 				6AA18E2A16F517210003124B /* CounterTap */,
 				6AA18E2316F517210003124B /* Frameworks */,
+				6AA18E4A16F57AA40003124B /* JSONKit.h */,
+				6AA18E4B16F57AA40003124B /* JSONKit.m */,
 				6AA18E2216F517210003124B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -185,6 +194,7 @@
 				6AA18E4316F5187F0003124B /* CTCounterTableViewController.m in Sources */,
 				6AA18E4616F522010003124B /* CTCounter.m in Sources */,
 				6AA18E4916F533E00003124B /* CTTextFieldCell.m in Sources */,
+				6AA18E4C16F57AA40003124B /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

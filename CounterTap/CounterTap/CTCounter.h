@@ -11,4 +11,6 @@
 @property(nonatomic,copy) NSString* title;
 @property(nonatomic,assign) NSInteger count;
 
+- (NSDictionary*)asDictionary;
+
 @end
