@@ -1,0 +1,3 @@
+[submodule "CounterTap/Vendor/JSONKit"]
+	path = CounterTap/Vendor/JSONKit
+	url = https://github.com/booyah/JSONKit.git
