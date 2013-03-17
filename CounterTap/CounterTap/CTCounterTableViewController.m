@@ -296,11 +296,16 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             break;
         }
 
-        case CTCounterView_CSVExportType:
-            exportData = nil;  // TODO(jeff): implement.
-            mimeType = @"text/csv";
+        case CTCounterView_CSVExportType: {
+            __block NSMutableString* string = [[[NSMutableString alloc] initWithString:[CTCounter headerForCSV]] autorelease];
+            [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [string appendString:[obj asRowForCSV]];
+            }];
+            exportData = [string dataUsingEncoding:NSUTF8StringEncoding];
+            mimeType = @"text/csv; header=present";
             fileName = @"export.csv";
             break;
+        }
     }
 
     MFMailComposeViewController* controller = [[[MFMailComposeViewController alloc] init] autorelease];

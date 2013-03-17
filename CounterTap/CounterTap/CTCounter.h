@@ -13,4 +13,7 @@
 
 - (NSDictionary*)asDictionary;
 
++ (NSString*)headerForCSV;
+- (NSString*)asRowForCSV;
+
 @end

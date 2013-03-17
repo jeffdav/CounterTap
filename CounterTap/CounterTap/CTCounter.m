@@ -29,6 +29,14 @@ NSString* const CTCounter_CountKey = @"CTCounterCountKey";
     return @{ @"title" : _title, @"count" : @(_count) };
 }
 
++ (NSString*)headerForCSV {
+    return @"Title,Count\r\n";
+}
+
+- (NSString*)asRowForCSV {
+    return [NSString stringWithFormat:@"%@,%d\r\n", _title, _count];
+}
+
 #pragma mark - NSCoder
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
