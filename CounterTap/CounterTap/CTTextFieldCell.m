@@ -25,8 +25,9 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
         _textField = [[[UITextField alloc] init] autorelease];
-        _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         _textField.adjustsFontSizeToFitWidth = YES;
+        _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        _textField.font = [UIFont boldSystemFontOfSize:16];
         [self.contentView addSubview:_textField];
 
         self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -50,9 +51,9 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     CGRect contentBounds = self.contentView.bounds;
-    
+
     CGRect labelFrame = self.textLabel.frame;
     if (_labelWidth > 0.0) {
         labelFrame.size.width = _labelWidth;
@@ -61,7 +62,7 @@
         labelFrame.size.width = size.width;
     }
     self.textLabel.frame = labelFrame;
-    
+
     CGRect fieldFrame;
     fieldFrame.origin.x = labelFrame.origin.x + labelFrame.size.width + kMargin;
     fieldFrame.origin.y = kOffset;

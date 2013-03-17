@@ -24,6 +24,7 @@
 
 - (void)styleCounterCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
 - (void)styleOptionsCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
+- (void)handleOption:(NSInteger)option;
 
 - (void)addItemWasTapped:(id)sender;
 - (void)doneItemWasTapped:(id)sender;
@@ -32,6 +33,17 @@
 
 @interface CTCounterTableViewController () <CTTextFieldDelegate>
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell;
+@end
+
+typedef void (^ConfirmBlock)(NSInteger option);
+
+@interface CTCounterTableViewController () <UIActionSheetDelegate> {
+    NSInteger _optionPendingConfirm;
+    ConfirmBlock _blockPendingConfirm;
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)confirmOption:(NSInteger)option withBlock:(ConfirmBlock)block;
 @end
 
 enum {
@@ -43,6 +55,8 @@ enum {
 
 enum {
     CTCounterView_OptionExport,
+    CTCounterView_OptionResetAll,
+    CTCounterView_OptionRemoveAll,
 
     CTCounterView_OptionsCount
 };
@@ -60,6 +74,9 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    if (_blockPendingConfirm) Block_release(_blockPendingConfirm);
+    _blockPendingConfirm = nil;
 
     [_items release];
     [_addItem release];
@@ -146,11 +163,22 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.textLabel.text = @"Export";
             break;
+        case CTCounterView_OptionResetAll:
+            cell.textLabel.text = @"Reset All";
+            break;
+        case CTCounterView_OptionRemoveAll:
+            cell.textLabel.text = @"Remove All";
+            break;
     }
 }
 
 - (void)addItemWasTapped:(id)sender {
     [self.tableView setEditing:YES animated:YES];
+
+    if ([_items count] == 0) {
+        UITableViewHeaderFooterView* footer = [self.tableView footerViewForSection:CTCounterView_CounterSection];
+        footer.textLabel.text = nil;
+    }
 
     NSIndexPath* indexPath = [NSIndexPath indexPathForItem:_items.count inSection:CTCounterView_CounterSection];
     CTCounter* counter = [[[CTCounter alloc] init] autorelease];
@@ -171,18 +199,102 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     self.navigationItem.leftBarButtonItem.enabled = YES;
 }
 
+- (void)handleOption:(NSInteger)option {
+    switch (option) {
+        case CTCounterView_OptionResetAll:
+            [self confirmOption:option withBlock:^(NSInteger option) {
+                [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    CTCounter* counter = obj;
+                    counter.count = 0;
+                }];
+                [self.tableView reloadData];
+                [self persistItems];
+            }];
+
+        case CTCounterView_OptionRemoveAll:
+            [self confirmOption:option withBlock:^(NSInteger option) {
+                [_items removeAllObjects];
+                [self.tableView reloadData];
+                [self persistItems];
+            }];
+            break;
+
+        default:
+            break;
+    }
+}
+
+- (void)confirmOption:(NSInteger)option withBlock:(ConfirmBlock)block {
+    _optionPendingConfirm = option;
+    _blockPendingConfirm = Block_copy(block);
+
+    NSString* title;
+    NSString* destructive;
+    switch (option) {
+        case CTCounterView_OptionResetAll:
+            title = @"Reset all counters to 0?\nThis cannot be undone.";
+            destructive = @"Reset All";
+            break;
+        case CTCounterView_OptionRemoveAll:
+            title = @"Delete all timers?\nThis cannot be undone.";
+            destructive = @"Delete All";
+            break;
+        default:
+            title = @"Confirm?";
+            destructive = @"Yes";
+            break;
+    }
+
+    UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:destructive otherButtonTitles:nil] autorelease];
+    [sheet showFromRect:self.tableView.frame inView:self.view animated:YES];
+}
+
 #pragma mark - CTTextFieldCellDelegate
 
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell {
     NSIndexPath* path = [self.tableView indexPathForCell:cell];
+
+    // This can happen if the item was deleted while being edited.
+    if (path.row >= [_items count]) return;
+
     CTCounter* counter = [_items objectAtIndex:path.row];
     counter.title = cell.textField.text;
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        _blockPendingConfirm(_optionPendingConfirm);
+        Block_release(_blockPendingConfirm);
+        _blockPendingConfirm = nil;
+        _optionPendingConfirm = 0;
+    }
 }
 
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return CTCounterView_SectionCount;
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    switch (section) {
+        case CTCounterView_CounterSection: return @"Counters";
+        case CTCounterView_OptionsSection: return @"Options";
+        default: return nil;
+    }
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+    switch (section) {
+        case CTCounterView_CounterSection:
+            if ([_items count] == 0) {
+                return @"Tap the Add button to create a counter...";
+            }
+            return nil;
+        default: return nil;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -237,8 +349,13 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [_items removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
+
+        if ([_items count] == 0) {
+            [self doneItemWasTapped:self];
+            [tableView reloadData];
+        }
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        NSLog(@"commitEditingStyle wants to insert an item.");
+        NSLog(@"commitEditingStyle: wants to insert an item.");
     }   
 }
 
@@ -271,6 +388,10 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             [tableView reloadData];
             break;
         }
+
+        case CTCounterView_OptionsSection:
+            [self handleOption:indexPath.row];
+            break;
 
         default:
             break;
