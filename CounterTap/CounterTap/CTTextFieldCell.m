@@ -8,12 +8,7 @@
 
 #import "CTTextFieldCell.h"
 
-@interface CTTextFieldCell ()  {
-  @private
-    UITextField* _textField;
-    CGFloat _labelWidth;
-    BOOL _alwaysEditable;
-}
+@interface CTTextFieldCell ()
 @end
 
 @implementation CTTextFieldCell
@@ -29,7 +24,7 @@
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier {
     if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
-        _textField = [[UITextField alloc] init];
+        _textField = [[[UITextField alloc] init] autorelease];
         _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         _textField.adjustsFontSizeToFitWidth = YES;
         [self.contentView addSubview:_textField];
@@ -49,8 +44,6 @@
     [center removeObserver:self name:UITextFieldTextDidBeginEditingNotification object:_textField];
     [center removeObserver:self name:UITextFieldTextDidChangeNotification object:_textField];
     [center removeObserver:self name:UITextFieldTextDidEndEditingNotification object:_textField];
-
-    [_textField release];
 
     [super dealloc];
 }

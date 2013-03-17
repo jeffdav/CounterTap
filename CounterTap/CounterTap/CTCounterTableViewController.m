@@ -20,6 +20,7 @@
 }
 - (void)loadItems;
 - (void)persistItems;
+- (void)syncData;
 
 - (void)styleCounterCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
 - (void)styleOptionsCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
@@ -70,12 +71,12 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
     _addItem = [[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStyleBordered target:self action:@selector(addItemWasTapped:)];
-    self.navigationItem.rightBarButtonItem = _addItem;
-
     _doneItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneItemWasTapped:)];
+    
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem = _addItem;
+    self.navigationItem.title = @"CounterTap!";
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
@@ -86,6 +87,14 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    
+    self.navigationItem.rightBarButtonItem.enabled = !editing;
+    
+    [self syncData];
 }
 
 #pragma mark - Internal
@@ -113,16 +122,15 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSData* data = [NSKeyedArchiver archivedDataWithRootObject:_items];
     [defaults setObject:data forKey:CTDefaults_ItemsKey];
+    [defaults synchronize];
+}
+
+- (void)syncData {
+    
 }
 
 - (void)willEnterBackground:(id)sender {
     [self persistItems];
-}
-
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing:editing animated:animated];
-
-    self.navigationItem.rightBarButtonItem.enabled = !editing;
 }
 
 - (void)styleCounterCell:(UITableViewCell *)cell atIndex:(NSInteger)index {
@@ -149,6 +157,9 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     [_items setObject:counter forKey:[NSNumber numberWithInt:_items.count]];
     [self.tableView insertRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
 
+    CTTextFieldCell* textfieldCell = (id)[self.tableView cellForRowAtIndexPath:indexPath];
+    [textfieldCell.textField becomeFirstResponder];
+
     self.navigationItem.rightBarButtonItem = _doneItem;
     self.navigationItem.leftBarButtonItem.enabled = NO;
 }
@@ -163,6 +174,9 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 #pragma mark - CTTextFieldCellDelegate
 
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell {
+    NSIndexPath* path = [self.tableView indexPathForCell:cell];
+    CTCounter* counter = [_items objectForKey:[NSNumber numberWithInt:path.row]];
+    counter.title = cell.textField.text;
 }
 
 #pragma mark - UITableViewDataSource
