@@ -13,7 +13,7 @@
 
 @interface CTCounterTableViewController () {
   @private
-    NSMutableDictionary* _items;
+    NSMutableArray* _items;
 
     UIBarButtonItem* _addItem;
     UIBarButtonItem* _doneItem;
@@ -103,18 +103,18 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSData* data = [defaults objectForKey:CTDefaults_ItemsKey];
     if (data != nil) {
-        NSDictionary* dictionary = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if (dictionary != nil) {
-            _items = [[NSMutableDictionary alloc] initWithDictionary:dictionary];
+        NSArray* array = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (array != nil) {
+            _items = [[NSMutableArray alloc] initWithArray:array];
         }
     }
 
     if (_items == nil) {
-        _items = [[NSMutableDictionary alloc] init];
+        _items = [[NSMutableArray alloc] init];
         CTCounter* counter = [[CTCounter alloc] init];
         counter.title = @"Example counter";
         counter.count = 2;
-        [_items setObject:counter forKey:[NSNumber numberWithInt:0]];
+        [_items addObject:counter];
     }
 }
 
@@ -134,7 +134,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 }
 
 - (void)styleCounterCell:(UITableViewCell *)cell atIndex:(NSInteger)index {
-    CTCounter* counter = [_items objectForKey:[NSNumber numberWithInt:index]];
+    CTCounter* counter = [_items objectAtIndex:index];
     CTTextFieldCell* textfieldCell = (id)cell;
     textfieldCell.textField.text = counter.title;
     textfieldCell.detailTextLabel.text = [NSString stringWithFormat:@"%d", counter.count];
@@ -154,7 +154,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
     NSIndexPath* indexPath = [NSIndexPath indexPathForItem:_items.count inSection:CTCounterView_CounterSection];
     CTCounter* counter = [[[CTCounter alloc] init] autorelease];
-    [_items setObject:counter forKey:[NSNumber numberWithInt:_items.count]];
+    [_items addObject:counter];
     [self.tableView insertRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
 
     CTTextFieldCell* textfieldCell = (id)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -175,7 +175,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell {
     NSIndexPath* path = [self.tableView indexPathForCell:cell];
-    CTCounter* counter = [_items objectForKey:[NSNumber numberWithInt:path.row]];
+    CTCounter* counter = [_items objectAtIndex:path.row];
     counter.title = cell.textField.text;
 }
 
@@ -235,7 +235,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [_items removeObjectForKey:[NSNumber numberWithInt:indexPath.row]];
+        [_items removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         NSLog(@"commitEditingStyle wants to insert an item.");
@@ -243,6 +243,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+    [_items exchangeObjectAtIndex:fromIndexPath.row withObjectAtIndex:toIndexPath.row];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -263,10 +264,9 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     switch (indexPath.section) {
         case CTCounterView_CounterSection: {
-            CTCounter* counter = [_items objectForKey:[NSNumber numberWithInt:indexPath.row]];
+            CTCounter* counter = [_items objectAtIndex:indexPath.row];
             counter.count++;
             [tableView reloadData];
             break;
