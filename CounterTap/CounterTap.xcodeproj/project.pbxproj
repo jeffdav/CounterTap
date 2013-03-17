@@ -1,0 +1,306 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6AA18E2516F517210003124B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA18E2416F517210003124B /* UIKit.framework */; };
+		6AA18E2716F517210003124B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA18E2616F517210003124B /* Foundation.framework */; };
+		6AA18E2916F517210003124B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA18E2816F517210003124B /* CoreGraphics.framework */; };
+		6AA18E2F16F517210003124B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AA18E2D16F517210003124B /* InfoPlist.strings */; };
+		6AA18E3116F517210003124B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E3016F517210003124B /* main.m */; };
+		6AA18E3516F517210003124B /* CTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E3416F517210003124B /* CTAppDelegate.m */; };
+		6AA18E3716F517210003124B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA18E3616F517210003124B /* Default.png */; };
+		6AA18E3916F517210003124B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA18E3816F517210003124B /* Default@2x.png */; };
+		6AA18E3B16F517210003124B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA18E3A16F517210003124B /* Default-568h@2x.png */; };
+		6AA18E4316F5187F0003124B /* CTCounterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E4216F5187F0003124B /* CTCounterTableViewController.m */; };
+		6AA18E4616F522010003124B /* CTCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E4516F522010003124B /* CTCounter.m */; };
+		6AA18E4916F533E00003124B /* CTTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA18E4816F533E00003124B /* CTTextFieldCell.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6AA18E2116F517210003124B /* CounterTap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CounterTap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AA18E2416F517210003124B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6AA18E2616F517210003124B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6AA18E2816F517210003124B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6AA18E2C16F517210003124B /* CounterTap-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CounterTap-Info.plist"; sourceTree = "<group>"; };
+		6AA18E2E16F517210003124B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6AA18E3016F517210003124B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6AA18E3216F517210003124B /* CounterTap-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CounterTap-Prefix.pch"; sourceTree = "<group>"; };
+		6AA18E3316F517210003124B /* CTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTAppDelegate.h; sourceTree = "<group>"; };
+		6AA18E3416F517210003124B /* CTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTAppDelegate.m; sourceTree = "<group>"; };
+		6AA18E3616F517210003124B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		6AA18E3816F517210003124B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		6AA18E3A16F517210003124B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		6AA18E4116F5187F0003124B /* CTCounterTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTCounterTableViewController.h; sourceTree = "<group>"; };
+		6AA18E4216F5187F0003124B /* CTCounterTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTCounterTableViewController.m; sourceTree = "<group>"; };
+		6AA18E4416F522010003124B /* CTCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTCounter.h; sourceTree = "<group>"; };
+		6AA18E4516F522010003124B /* CTCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTCounter.m; sourceTree = "<group>"; };
+		6AA18E4716F533E00003124B /* CTTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTTextFieldCell.h; sourceTree = "<group>"; };
+		6AA18E4816F533E00003124B /* CTTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTextFieldCell.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6AA18E1E16F517210003124B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AA18E2516F517210003124B /* UIKit.framework in Frameworks */,
+				6AA18E2716F517210003124B /* Foundation.framework in Frameworks */,
+				6AA18E2916F517210003124B /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6AA18E1816F517210003124B = {
+			isa = PBXGroup;
+			children = (
+				6AA18E2A16F517210003124B /* CounterTap */,
+				6AA18E2316F517210003124B /* Frameworks */,
+				6AA18E2216F517210003124B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6AA18E2216F517210003124B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6AA18E2116F517210003124B /* CounterTap.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6AA18E2316F517210003124B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6AA18E2416F517210003124B /* UIKit.framework */,
+				6AA18E2616F517210003124B /* Foundation.framework */,
+				6AA18E2816F517210003124B /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6AA18E2A16F517210003124B /* CounterTap */ = {
+			isa = PBXGroup;
+			children = (
+				6AA18E3316F517210003124B /* CTAppDelegate.h */,
+				6AA18E3416F517210003124B /* CTAppDelegate.m */,
+				6AA18E4416F522010003124B /* CTCounter.h */,
+				6AA18E4516F522010003124B /* CTCounter.m */,
+				6AA18E4116F5187F0003124B /* CTCounterTableViewController.h */,
+				6AA18E4216F5187F0003124B /* CTCounterTableViewController.m */,
+				6AA18E4716F533E00003124B /* CTTextFieldCell.h */,
+				6AA18E4816F533E00003124B /* CTTextFieldCell.m */,
+				6AA18E2B16F517210003124B /* Supporting Files */,
+			);
+			path = CounterTap;
+			sourceTree = "<group>";
+		};
+		6AA18E2B16F517210003124B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6AA18E2C16F517210003124B /* CounterTap-Info.plist */,
+				6AA18E2D16F517210003124B /* InfoPlist.strings */,
+				6AA18E3016F517210003124B /* main.m */,
+				6AA18E3216F517210003124B /* CounterTap-Prefix.pch */,
+				6AA18E3616F517210003124B /* Default.png */,
+				6AA18E3816F517210003124B /* Default@2x.png */,
+				6AA18E3A16F517210003124B /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6AA18E2016F517210003124B /* CounterTap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AA18E3E16F517210003124B /* Build configuration list for PBXNativeTarget "CounterTap" */;
+			buildPhases = (
+				6AA18E1D16F517210003124B /* Sources */,
+				6AA18E1E16F517210003124B /* Frameworks */,
+				6AA18E1F16F517210003124B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CounterTap;
+			productName = CounterTap;
+			productReference = 6AA18E2116F517210003124B /* CounterTap.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6AA18E1916F517210003124B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = CT;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = JorfSoft;
+			};
+			buildConfigurationList = 6AA18E1C16F517210003124B /* Build configuration list for PBXProject "CounterTap" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6AA18E1816F517210003124B;
+			productRefGroup = 6AA18E2216F517210003124B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6AA18E2016F517210003124B /* CounterTap */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6AA18E1F16F517210003124B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AA18E2F16F517210003124B /* InfoPlist.strings in Resources */,
+				6AA18E3716F517210003124B /* Default.png in Resources */,
+				6AA18E3916F517210003124B /* Default@2x.png in Resources */,
+				6AA18E3B16F517210003124B /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6AA18E1D16F517210003124B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AA18E3116F517210003124B /* main.m in Sources */,
+				6AA18E3516F517210003124B /* CTAppDelegate.m in Sources */,
+				6AA18E4316F5187F0003124B /* CTCounterTableViewController.m in Sources */,
+				6AA18E4616F522010003124B /* CTCounter.m in Sources */,
+				6AA18E4916F533E00003124B /* CTTextFieldCell.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6AA18E2D16F517210003124B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6AA18E2E16F517210003124B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6AA18E3C16F517210003124B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6AA18E3D16F517210003124B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6AA18E3F16F517210003124B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CounterTap/CounterTap-Prefix.pch";
+				INFOPLIST_FILE = "CounterTap/CounterTap-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6AA18E4016F517210003124B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CounterTap/CounterTap-Prefix.pch";
+				INFOPLIST_FILE = "CounterTap/CounterTap-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6AA18E1C16F517210003124B /* Build configuration list for PBXProject "CounterTap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AA18E3C16F517210003124B /* Debug */,
+				6AA18E3D16F517210003124B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6AA18E3E16F517210003124B /* Build configuration list for PBXNativeTarget "CounterTap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AA18E3F16F517210003124B /* Debug */,
+				6AA18E4016F517210003124B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6AA18E1916F517210003124B /* Project object */;
+}
