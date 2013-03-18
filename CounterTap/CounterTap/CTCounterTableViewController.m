@@ -191,16 +191,16 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 - (void)styleOptionsCell:(UITableViewCell *)cell atIndex:(NSInteger)index {
     switch (index) {
         case CTCounterView_OptionSort:
-            cell.textLabel.text = @"Sort";
+            cell.textLabel.text = @"Sort...";
             break;
         case CTCounterView_OptionExport:
-            cell.textLabel.text = @"Export";
+            cell.textLabel.text = @"Export...";
             break;
         case CTCounterView_OptionResetAll:
-            cell.textLabel.text = @"Reset All";
+            cell.textLabel.text = @"Reset All...";
             break;
         case CTCounterView_OptionRemoveAll:
-            cell.textLabel.text = @"Remove All";
+            cell.textLabel.text = @"Remove All...";
             break;
     }
 }
@@ -208,7 +208,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 #pragma mark BarButtonItems
 
 - (void)addItemWasTapped:(id)sender {
-    [self.tableView setEditing:YES animated:YES];
+    [self setEditing:YES animated:YES];
 
     if ([_items count] == 0) {
         UITableViewHeaderFooterView* footer = [self.tableView footerViewForSection:CTCounterView_CounterSection];
@@ -228,7 +228,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 }
 
 - (void)doneItemWasTapped:(id)sender {
-    [self.tableView setEditing:NO animated:YES];
+    [self setEditing:NO animated:YES];
 
     self.navigationItem.rightBarButtonItem = _addItem;
     self.navigationItem.leftBarButtonItem.enabled = YES;
@@ -414,7 +414,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 }
 
 - (void)textFieldDidReturn:(CTTextFieldCell *)cell {
-    [self doneItemWasTapped:self];
+    //[self doneItemWasTapped:self];
 }
 
 - (void)textFieldDownWasTapped:(CTTextFieldCell *)cell {
