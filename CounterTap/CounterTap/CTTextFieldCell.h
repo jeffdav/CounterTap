@@ -14,6 +14,7 @@
 - (void)textFieldCellTextDidChange:(CTTextFieldCell*)cell;
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell*)cell;
 - (void)textFieldDidReturn:(CTTextFieldCell*)cell;
+- (void)textFieldDownWasTapped:(CTTextFieldCell*)cell;
 @end
 
 @interface CTTextFieldCell : UITableViewCell

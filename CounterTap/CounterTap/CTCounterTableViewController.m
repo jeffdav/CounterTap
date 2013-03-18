@@ -37,6 +37,7 @@
 @interface CTCounterTableViewController () <CTTextFieldDelegate>
 - (void)textFieldCellDidEndEditing:(CTTextFieldCell *)cell;
 - (void)textFieldDidReturn:(CTTextFieldCell *)cell;
+- (void)textFieldDownWasTapped:(CTTextFieldCell *)cell;
 @end
 
 typedef void (^ConfirmBlock)(NSInteger option);
@@ -214,7 +215,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
         footer.textLabel.text = nil;
     }
 
-    NSIndexPath* indexPath = [NSIndexPath indexPathForItem:_items.count inSection:CTCounterView_CounterSection];
+    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:_items.count inSection:CTCounterView_CounterSection];
     CTCounter* counter = [[[CTCounter alloc] init] autorelease];
     [_items addObject:counter];
     [self.tableView insertRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -408,10 +409,23 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
     CTCounter* counter = [_items objectAtIndex:path.row];
     counter.title = cell.textField.text;
+    [self.tableView reloadData];
+    [self persistItems];
 }
 
 - (void)textFieldDidReturn:(CTTextFieldCell *)cell {
     [self doneItemWasTapped:self];
+}
+
+- (void)textFieldDownWasTapped:(CTTextFieldCell *)cell {
+    NSIndexPath* path = [self.tableView indexPathForCell:cell];
+
+    if (path.row >= [_items count]) return;
+
+    CTCounter* counter = [_items objectAtIndex:path.row];
+    counter.count--;
+    [self.tableView reloadData];
+    [self persistItems];
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate

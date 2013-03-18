@@ -11,4 +11,9 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+CF_INLINE CGFloat CenterDim(CGFloat outer, CGFloat inner) {
+    return roundf((outer - inner) / 2.0f);
+}
+
 #endif
