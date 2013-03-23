@@ -127,6 +127,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     _doneItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneItemWasTapped:)];
 
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    self.navigationItem.leftBarButtonItem.enabled = [_items count] > 0;
     self.navigationItem.rightBarButtonItem = _addItem;
     self.navigationItem.title = @"CounterTap!";
 
@@ -208,8 +209,6 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 #pragma mark BarButtonItems
 
 - (void)addItemWasTapped:(id)sender {
-    [self setEditing:YES animated:YES];
-
     if ([_items count] == 0) {
         UITableViewHeaderFooterView* footer = [self.tableView footerViewForSection:CTCounterView_CounterSection];
         footer.textLabel.text = nil;
@@ -225,13 +224,15 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
     self.navigationItem.rightBarButtonItem = _doneItem;
     self.navigationItem.leftBarButtonItem.enabled = NO;
+
+    [self setEditing:YES animated:YES];
+    self.navigationItem.rightBarButtonItem.enabled = YES;
 }
 
 - (void)doneItemWasTapped:(id)sender {
-    [self setEditing:NO animated:YES];
-
     self.navigationItem.rightBarButtonItem = _addItem;
     self.navigationItem.leftBarButtonItem.enabled = YES;
+    [self setEditing:NO animated:NO];
 }
 
 #pragma mark Options
@@ -254,6 +255,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
                 [_items removeAllObjects];
                 [self.tableView reloadData];
                 [self persistItems];
+                self.navigationItem.leftBarButtonItem.enabled = NO;
             }];
             break;
 
@@ -286,7 +288,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             destructive = @"Reset All";
             break;
         case CTCounterView_OptionRemoveAll:
-            title = @"Delete all timers?\nThis cannot be undone.";
+            title = @"Delete all counters?\nThis cannot be undone.";
             destructive = @"Delete All";
             break;
         default:

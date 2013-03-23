@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A2ED43116F6E96D00FB4162 /* CTSheetNameTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A2ED43016F6E96D00FB4162 /* CTSheetNameTableViewController.m */; };
 		6AA18E2516F517210003124B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA18E2416F517210003124B /* UIKit.framework */; };
 		6AA18E2716F517210003124B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA18E2616F517210003124B /* Foundation.framework */; };
 		6AA18E2916F517210003124B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA18E2816F517210003124B /* CoreGraphics.framework */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6A2ED42F16F6E96D00FB4162 /* CTSheetNameTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTSheetNameTableViewController.h; sourceTree = "<group>"; };
+		6A2ED43016F6E96D00FB4162 /* CTSheetNameTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTSheetNameTableViewController.m; sourceTree = "<group>"; };
 		6AA18E2116F517210003124B /* CounterTap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CounterTap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AA18E2416F517210003124B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6AA18E2616F517210003124B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -102,6 +105,8 @@
 				6AA18E4516F522010003124B /* CTCounter.m */,
 				6AA18E4116F5187F0003124B /* CTCounterTableViewController.h */,
 				6AA18E4216F5187F0003124B /* CTCounterTableViewController.m */,
+				6A2ED42F16F6E96D00FB4162 /* CTSheetNameTableViewController.h */,
+				6A2ED43016F6E96D00FB4162 /* CTSheetNameTableViewController.m */,
 				6AA18E4716F533E00003124B /* CTTextFieldCell.h */,
 				6AA18E4816F533E00003124B /* CTTextFieldCell.m */,
 				6AA18E2B16F517210003124B /* Supporting Files */,
@@ -195,6 +200,7 @@
 				6AA18E4616F522010003124B /* CTCounter.m in Sources */,
 				6AA18E4916F533E00003124B /* CTTextFieldCell.m in Sources */,
 				6AA18E4C16F57AA40003124B /* JSONKit.m in Sources */,
+				6A2ED43116F6E96D00FB4162 /* CTSheetNameTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
