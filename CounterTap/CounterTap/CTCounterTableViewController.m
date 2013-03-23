@@ -164,7 +164,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
         _items = [[NSMutableArray alloc] init];
         CTCounter* counter = [[CTCounter alloc] init];
         counter.title = @"Example counter";
-        counter.count = 2;
+        [counter addTaps:2];
         [_items addObject:counter];
     }
 }
@@ -243,7 +243,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             [self confirmOption:option withBlock:^(NSInteger option) {
                 [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     CTCounter* counter = obj;
-                    counter.count = 0;
+                    [counter clearTaps];
                 }];
                 [self.tableView reloadData];
                 [self persistItems];
@@ -411,8 +411,6 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
     CTCounter* counter = [_items objectAtIndex:path.row];
     counter.title = cell.textField.text;
-    [self.tableView reloadData];
-    [self persistItems];
 }
 
 - (void)textFieldDidReturn:(CTTextFieldCell *)cell {
@@ -425,7 +423,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     if (path.row >= [_items count]) return;
 
     CTCounter* counter = [_items objectAtIndex:path.row];
-    counter.count--;
+    [counter removeLastTap];
     [self.tableView reloadData];
     [self persistItems];
 }
@@ -563,7 +561,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     switch (indexPath.section) {
         case CTCounterView_CounterSection: {
             CTCounter* counter = [_items objectAtIndex:indexPath.row];
-            counter.count++;
+            [counter addTap];
             [tableView reloadData];
             break;
         }
