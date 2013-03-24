@@ -13,6 +13,7 @@
 #import "JSONKit.h"
 
 #import "CTCounter.h"
+#import "CTGraphViewController.h"
 #import "CTTextFieldCell.h"
 
 @interface CTCounterTableViewController () {
@@ -72,6 +73,7 @@ enum {
 enum {
     CTCounterView_OptionSort,
     CTCounterView_OptionExport,
+    CTCounterView_Graph,
     CTCounterView_OptionResetAll,
     CTCounterView_OptionRemoveAll,
 
@@ -197,6 +199,9 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
         case CTCounterView_OptionExport:
             cell.textLabel.text = @"Export...";
             break;
+        case CTCounterView_Graph:
+            cell.textLabel.text = @"Graph...";
+            break;
         case CTCounterView_OptionResetAll:
             cell.textLabel.text = @"Reset All...";
             break;
@@ -258,6 +263,12 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
                 self.navigationItem.leftBarButtonItem.enabled = NO;
             }];
             break;
+
+        case CTCounterView_Graph: {
+            CTGraphViewController* graphController = [[[CTGraphViewController alloc] initWithCounters:_items] autorelease];
+            [self.navigationController pushViewController:graphController animated:YES];
+            break;
+        }
 
         case CTCounterView_OptionExport:
             if ([MFMailComposeViewController canSendMail]) {
