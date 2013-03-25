@@ -25,6 +25,7 @@
 		6AEB036D16FE9A9300FEB9C2 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEB036C16FE9A9300FEB9C2 /* libCorePlot-CocoaTouch.a */; };
 		6AEB037016FE9B1000FEB9C2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AEB036E16FE9AED00FEB9C2 /* QuartzCore.framework */; };
 		6AEB037416FEA4B500FEB9C2 /* CTGraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB037316FEA4B500FEB9C2 /* CTGraphViewController.m */; };
+		6AEB037716FF9B0300FEB9C2 /* CTCounterGraphDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEB037616FF9B0300FEB9C2 /* CTCounterGraphDataSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +131,8 @@
 		6AEB036E16FE9AED00FEB9C2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6AEB037216FEA4B500FEB9C2 /* CTGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTGraphViewController.h; sourceTree = "<group>"; };
 		6AEB037316FEA4B500FEB9C2 /* CTGraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTGraphViewController.m; sourceTree = "<group>"; };
+		6AEB037516FF9B0300FEB9C2 /* CTCounterGraphDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTCounterGraphDataSource.h; sourceTree = "<group>"; };
+		6AEB037616FF9B0300FEB9C2 /* CTCounterGraphDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTCounterGraphDataSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +192,8 @@
 				6AA18E3416F517210003124B /* CTAppDelegate.m */,
 				6AA18E4416F522010003124B /* CTCounter.h */,
 				6AA18E4516F522010003124B /* CTCounter.m */,
+				6AEB037516FF9B0300FEB9C2 /* CTCounterGraphDataSource.h */,
+				6AEB037616FF9B0300FEB9C2 /* CTCounterGraphDataSource.m */,
 				6AA18E4116F5187F0003124B /* CTCounterTableViewController.h */,
 				6AA18E4216F5187F0003124B /* CTCounterTableViewController.m */,
 				6AEB037216FEA4B500FEB9C2 /* CTGraphViewController.h */,
@@ -371,6 +376,7 @@
 				6AA18E4C16F57AA40003124B /* JSONKit.m in Sources */,
 				6A2ED43116F6E96D00FB4162 /* CTSheetNameTableViewController.m in Sources */,
 				6AEB037416FEA4B500FEB9C2 /* CTGraphViewController.m in Sources */,
+				6AEB037716FF9B0300FEB9C2 /* CTCounterGraphDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

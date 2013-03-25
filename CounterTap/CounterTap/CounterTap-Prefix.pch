@@ -16,4 +16,6 @@ CF_INLINE CGFloat CenterDim(CGFloat outer, CGFloat inner) {
     return roundf((outer - inner) / 2.0f);
 }
 
+#define kSecondsInDay ((NSTimeInterval)(24 * 3600))
+
 #endif

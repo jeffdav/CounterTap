@@ -10,9 +10,11 @@
 
 #import "CorePlotHeaders/CorePlot-CocoaTouch.h"
 
-@interface CTGraphViewController () <CPTPlotDataSource> {
-    NSArray* _counters;
+#import "CTCounterGraphDataSource.h"
+
+@interface CTGraphViewController () {
     CPTXYGraph* _graph;
+    CTCounterGraphDataSource* _dataSource;
 }
 @end
 
@@ -24,9 +26,14 @@
 
 - (id)initWithCounters:(NSArray*)counters {
     if (self = [super init]) {
-        _counters = [counters retain];
+        _dataSource = [[CTCounterGraphDataSource alloc] initWithCounters:counters];
     }
     return self;
+}
+
+- (void)dealloc {
+    [_dataSource release];
+    [super dealloc];
 }
 
 - (void)viewDidLoad {
@@ -42,18 +49,26 @@
     CPTGraphHostingView* view = [[[CPTGraphHostingView alloc] initWithFrame:bounds] autorelease];
     self.view = view;
 
-    CPTTheme* theme = [CPTTheme themeNamed:kCPTPlainWhiteTheme];
-
     _graph = [[[CPTXYGraph alloc] initWithFrame:bounds] autorelease];
+
+    CPTTheme* theme = [CPTTheme themeNamed:kCPTPlainWhiteTheme];
     [_graph applyTheme:theme];
 
+    CPTXYPlotSpace* plotSpace = (id)_graph.defaultPlotSpace;
+    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(7)];
+    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(20)];
+
+    CPTMutableLineStyle* lineStyle = [CPTMutableLineStyle lineStyle];
+    lineStyle.lineColor = [CPTColor redColor];
+    lineStyle.lineWidth = 1;
+
+    CPTScatterPlot* plot = [[[CPTScatterPlot alloc] init] autorelease];
+    plot.dataSource = _dataSource;
+    plot.identifier = [_dataSource identifierForCounter:0];
+    plot.dataLineStyle = lineStyle;
+    [_graph addPlot:plot];
+
     view.hostedGraph = _graph;
-}
-
-#pragma mark - CPTPlotDataSource
-
-- (NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot {
-    return [_counters count];
 }
 
 @end

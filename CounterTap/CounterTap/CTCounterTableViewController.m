@@ -49,7 +49,6 @@ typedef void (^ConfirmBlock)(NSInteger option);
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
-
 - (void)confirmOption:(NSInteger)option withBlock:(ConfirmBlock)block;
 
 - (void)pickExportType;
@@ -164,10 +163,6 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
     if (_items == nil) {
         _items = [[NSMutableArray alloc] init];
-        CTCounter* counter = [[CTCounter alloc] init];
-        counter.title = @"Example counter";
-        [counter addTaps:2];
-        [_items addObject:counter];
     }
 }
 
@@ -214,15 +209,12 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 #pragma mark BarButtonItems
 
 - (void)addItemWasTapped:(id)sender {
-    if ([_items count] == 0) {
-        UITableViewHeaderFooterView* footer = [self.tableView footerViewForSection:CTCounterView_CounterSection];
-        footer.textLabel.text = nil;
-    }
-
     NSIndexPath* indexPath = [NSIndexPath indexPathForRow:_items.count inSection:CTCounterView_CounterSection];
     CTCounter* counter = [[[CTCounter alloc] init] autorelease];
     [_items addObject:counter];
     [self.tableView insertRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    [self.tableView reloadData];
 
     CTTextFieldCell* textfieldCell = (id)[self.tableView cellForRowAtIndexPath:indexPath];
     [textfieldCell.textField becomeFirstResponder];
