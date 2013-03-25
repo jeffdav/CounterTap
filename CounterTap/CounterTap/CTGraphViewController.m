@@ -55,8 +55,10 @@
     [_graph applyTheme:theme];
 
     CPTXYPlotSpace* plotSpace = (id)_graph.defaultPlotSpace;
-    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(7)];
-    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(20)];
+    NSUInteger xMax = [_dataSource numberOfDaysInCounter:[_dataSource.data objectAtIndex:0]];
+    plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(xMax)];
+    NSUInteger yMax = [_dataSource maxTapsInOneDayForCounter:[_dataSource.data objectAtIndex:0]];
+    plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(yMax)];
 
     CPTMutableLineStyle* lineStyle = [CPTMutableLineStyle lineStyle];
     lineStyle.lineColor = [CPTColor redColor];
