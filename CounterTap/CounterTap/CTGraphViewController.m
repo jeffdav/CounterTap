@@ -55,20 +55,22 @@
     [_graph applyTheme:theme];
 
     CPTXYPlotSpace* plotSpace = (id)_graph.defaultPlotSpace;
-    NSUInteger xMax = [_dataSource numberOfDaysInCounter:[_dataSource.data objectAtIndex:0]];
+    NSUInteger xMax = [_dataSource maxNumberOfDays];
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(xMax)];
-    NSUInteger yMax = [_dataSource maxTapsInOneDayForCounter:[_dataSource.data objectAtIndex:0]];
+    NSUInteger yMax = [_dataSource maxTapsInOneDay];
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(yMax)];
 
-    CPTMutableLineStyle* lineStyle = [CPTMutableLineStyle lineStyle];
-    lineStyle.lineColor = [CPTColor redColor];
-    lineStyle.lineWidth = 1;
+    for (int i = 0; i < [_dataSource numberOfCounters]; ++i) {
+        CPTMutableLineStyle* lineStyle = [CPTMutableLineStyle lineStyle];
+        lineStyle.lineColor = [CPTColor redColor];
+        lineStyle.lineWidth = 1;
 
-    CPTScatterPlot* plot = [[[CPTScatterPlot alloc] init] autorelease];
-    plot.dataSource = _dataSource;
-    plot.identifier = [_dataSource identifierForCounter:0];
-    plot.dataLineStyle = lineStyle;
-    [_graph addPlot:plot];
+        CPTScatterPlot* plot = [[[CPTScatterPlot alloc] init] autorelease];
+        plot.dataSource = _dataSource;
+        plot.identifier = [_dataSource identifierForCounter:i];
+        plot.dataLineStyle = lineStyle;
+        [_graph addPlot:plot];
+    }
 
     view.hostedGraph = _graph;
 }

@@ -27,4 +27,7 @@
 - (NSUInteger)numberOfDaysInCounter:(CTCounter*)counter;
 - (NSUInteger)maxTapsInOneDayForCounter:(CTCounter*)counter;
 
+- (NSUInteger)maxNumberOfDays;
+- (NSUInteger)maxTapsInOneDay;
+
 @end

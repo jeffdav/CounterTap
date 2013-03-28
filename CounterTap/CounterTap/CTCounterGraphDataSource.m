@@ -78,6 +78,22 @@
     return max;
 }
 
+- (NSUInteger)maxTapsInOneDay {
+    NSUInteger max = 0;
+    for (CTCounter* counter in _data) {
+        max = MAX(max, [self maxTapsInOneDayForCounter:counter]);
+    }
+    return max;
+}
+
+- (NSUInteger)maxNumberOfDays {
+    NSUInteger max = 0;
+    for (CTCounter* counter in _data) {
+        max = MAX(max, [self numberOfDaysInCounter:counter]);
+    }
+    return max;
+}
+
 #pragma mark - Internal
 
 - (NSUInteger)tapsInCounter:(CTCounter*)counter onDate:(NSDate*)date {
@@ -124,6 +140,10 @@
 
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot {
     CTCounter* counter = [self counterForIdentifier:(id)plot.identifier];
+    if ([counter.taps count] == 0) {
+        return 0;
+    }
+
     return [self daysBetween:[self minDateInCounter:counter] and:[self maxDateInCounter:counter]];
 }
 
