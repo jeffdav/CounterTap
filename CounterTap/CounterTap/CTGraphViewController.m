@@ -24,9 +24,9 @@ static NSArray* _colors = nil;
 
 + (void)initialize {
     // TODO(jeff): There's got to be a better way to generate colors.
-    _colors = @[ [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor],
-                 [CPTColor yellowColor], [CPTColor cyanColor], [CPTColor magentaColor],
-                 [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor] ];
+    _colors = [ @[ [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor],
+                   [CPTColor yellowColor], [CPTColor cyanColor], [CPTColor magentaColor],
+                   [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor] ] retain];
 }
 
 - (id)init {
