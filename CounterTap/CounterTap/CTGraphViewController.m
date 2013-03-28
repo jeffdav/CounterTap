@@ -19,14 +19,22 @@
 @end
 
 static NSArray* _colors = nil;
+static NSArray* _symbols = nil;
 
 @implementation CTGraphViewController
 
 + (void)initialize {
     // TODO(jeff): There's got to be a better way to generate colors.
-    _colors = [ @[ [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor],
-                   [CPTColor yellowColor], [CPTColor cyanColor], [CPTColor magentaColor],
-                   [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor] ] retain];
+    _colors = [@[ [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor],
+                  [CPTColor yellowColor], [CPTColor cyanColor], [CPTColor magentaColor],
+                  [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor] ] retain];
+
+    // TODO(jeff): Ditto symbols.
+    _symbols = [@[ [CPTPlotSymbol ellipsePlotSymbol], [CPTPlotSymbol rectanglePlotSymbol],
+                   [CPTPlotSymbol diamondPlotSymbol], [CPTPlotSymbol trianglePlotSymbol],
+                   [CPTPlotSymbol pentagonPlotSymbol], [CPTPlotSymbol hexagonPlotSymbol],
+                   [CPTPlotSymbol starPlotSymbol], [CPTPlotSymbol crossPlotSymbol],
+                   [CPTPlotSymbol plusPlotSymbol] ] retain];
 }
 
 - (id)init {
@@ -74,10 +82,16 @@ static NSArray* _colors = nil;
         lineStyle.lineColor = [_colors objectAtIndex:(i % [_colors count])];
         lineStyle.lineWidth = 1;
 
+        CPTPlotSymbol* plotSymbol = [_symbols objectAtIndex:(i % [_symbols count])];
+        plotSymbol.fill = [CPTFill fillWithColor:[_colors objectAtIndex:(i % [_colors count])]];
+        plotSymbol.lineStyle = lineStyle;
+        plotSymbol.size = CGSizeMake(5, 5);
+
         CPTScatterPlot* plot = [[[CPTScatterPlot alloc] init] autorelease];
         plot.dataSource = _dataSource;
         plot.identifier = [_dataSource identifierForCounter:i];
         plot.dataLineStyle = lineStyle;
+        plot.plotSymbol = plotSymbol;
         [_graph addPlot:plot];
     }
 
