@@ -18,7 +18,16 @@
 }
 @end
 
+static NSArray* _colors = nil;
+
 @implementation CTGraphViewController
+
++ (void)initialize {
+    // TODO(jeff): There's got to be a better way to generate colors.
+    _colors = @[ [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor],
+                 [CPTColor yellowColor], [CPTColor cyanColor], [CPTColor magentaColor],
+                 [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor] ];
+}
 
 - (id)init {
     return [self initWithCounters:[NSArray array]];
@@ -62,7 +71,7 @@
 
     for (int i = 0; i < [_dataSource numberOfCounters]; ++i) {
         CPTMutableLineStyle* lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineColor = [CPTColor redColor];
+        lineStyle.lineColor = [_colors objectAtIndex:(i % [_colors count])];
         lineStyle.lineWidth = 1;
 
         CPTScatterPlot* plot = [[[CPTScatterPlot alloc] init] autorelease];

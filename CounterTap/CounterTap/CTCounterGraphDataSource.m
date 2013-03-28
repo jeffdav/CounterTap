@@ -67,6 +67,9 @@
 }
 
 - (NSUInteger)numberOfDaysInCounter:(CTCounter *)counter {
+    if ([counter.taps count] == 0) {
+        return 0;
+    }
     return [self daysBetween:[self minDateInCounter:counter] and:[self maxDateInCounter:counter]];
 }
 
