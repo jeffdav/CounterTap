@@ -21,13 +21,18 @@
 - (NSUInteger)numberOfCounters;
 - (NSString*)identifierForCounter:(NSUInteger)counter;
 
+// TODO(jeff): Make private or access by index.
 - (NSDate*)minDateInCounter:(CTCounter*)counter;
 - (NSDate*)maxDateInCounter:(CTCounter*)counter;
 
+// TODO(jeff): Make private or access by index.
 - (NSUInteger)numberOfDaysInCounter:(CTCounter*)counter;
 - (NSUInteger)maxTapsInOneDayForCounter:(CTCounter*)counter;
 
 - (NSUInteger)maxNumberOfDays;
 - (NSUInteger)maxTapsInOneDay;
+
+- (NSDate*)minDate;
+- (NSDate*)maxDate;
 
 @end

@@ -21,6 +21,7 @@
 - (NSDate*)roundDate:(NSDate*)date;
 - (int)daysBetween:(NSDate*)startDate and:(NSDate*)endDate;
 - (NSDate*)dateForCounter:(CTCounter*)counter atIndex:(NSUInteger)index;
+- (NSDate*)dateByAddingDays:(NSUInteger)days toDate:(NSDate*)date;
 @end
 
 @implementation CTCounterGraphDataSource
@@ -97,6 +98,30 @@
     return max;
 }
 
+- (NSDate*)minDate {
+    NSDate* date = [NSDate distantFuture];
+    for (CTCounter* counter in _data) {
+        if ([counter.taps count] == 0) continue;
+
+        NSDate* min = [self minDateInCounter:counter];
+        if ([min compare:date] == NSOrderedAscending) {
+            date = min;
+        }
+    }
+    return date;
+}
+
+- (NSDate*)maxDate {
+    NSDate* date = [NSDate distantPast];
+    for (CTCounter* counter in _data) {
+        NSDate* max = [self maxDateInCounter:counter];
+        if ([max compare:date] == NSOrderedDescending) {
+            date = max;
+        }
+    }
+    return date;
+}
+
 #pragma mark - Internal
 
 - (NSUInteger)tapsInCounter:(CTCounter*)counter onDate:(NSDate*)date {
@@ -139,6 +164,13 @@
     return [calendar dateByAddingComponents:components toDate:[self minDateInCounter:counter] options:0];
 }
 
+- (NSDate*)dateByAddingDays:(NSUInteger)days toDate:(NSDate*)date {
+    NSDateComponents* components = [[[NSDateComponents alloc] init] autorelease];
+    [components setDay:days];
+
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    return [calendar dateByAddingComponents:components toDate:date options:0];
+}
 #pragma mark - CPTPlotDataSource
 
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot {
@@ -154,13 +186,15 @@
     CTCounter* counter = [self counterForIdentifier:(id)plot.identifier];
     switch (fieldEnum) {
         case CPTScatterPlotFieldX: {
-            NSNumber* x = [NSNumber numberWithUnsignedInteger:idx];
-            return x;
+            NSUInteger x = [self daysBetween:[self minDate] and:[self dateForCounter:counter atIndex:idx]];
+            NSLog(@"plot = %@ | x[%d] = %d", plot.identifier, idx, x);
+            return [NSNumber numberWithUnsignedInteger:x];
         }
 
         case CPTScatterPlotFieldY: {
-            NSNumber* y = [NSNumber numberWithUnsignedInteger:[self tapsInCounter:counter onDate:[self dateForCounter:counter atIndex:idx]]];
-            return y;
+            NSUInteger y = [self tapsInCounter:counter onDate:[self dateForCounter:counter atIndex:idx]];
+            NSLog(@"plot = %@ | y[%d] = %d", plot.identifier, idx, y);
+            return [NSNumber numberWithUnsignedInteger:y];
         }
     }
 
