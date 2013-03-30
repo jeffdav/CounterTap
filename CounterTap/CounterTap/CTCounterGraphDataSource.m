@@ -171,6 +171,7 @@
     NSCalendar* calendar = [NSCalendar currentCalendar];
     return [calendar dateByAddingComponents:components toDate:date options:0];
 }
+
 #pragma mark - CPTPlotDataSource
 
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot {
