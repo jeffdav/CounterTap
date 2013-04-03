@@ -72,9 +72,9 @@ static NSArray* _symbols = nil;
     [_graph applyTheme:theme];
 
     CPTXYPlotSpace* plotSpace = (id)_graph.defaultPlotSpace;
-    NSUInteger xMax = [_dataSource maxNumberOfDays];
+    NSUInteger xMax = [_dataSource maxNumberOfDays] + 1;
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(xMax)];
-    NSUInteger yMax = [_dataSource maxTapsInOneDay];
+    NSUInteger yMax = [_dataSource maxTapsInOneDay] + 1;
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromInt(0) length:CPTDecimalFromInt(yMax)];
 
     for (int i = 0; i < [_dataSource numberOfCounters]; ++i) {
@@ -95,6 +95,17 @@ static NSArray* _symbols = nil;
         [_graph addPlot:plot];
     }
 
+    [plotSpace scaleToFitPlots:_graph.allPlots];
+
+    // TODO(jeff): Decide if I want to do this or not.
+//    CPTMutablePlotRange* xRange = [plotSpace.xRange mutableCopy];
+//    [xRange expandRangeByFactor:CPTDecimalFromCGFloat(1.2f)];
+//    plotSpace.xRange = xRange;
+//    CPTMutablePlotRange* yRange = [plotSpace.yRange mutableCopy];
+//    [yRange expandRangeByFactor:CPTDecimalFromCGFloat(1.2f)];
+//    plotSpace.yRange = yRange;
+
+    view.allowPinchScaling = YES;
     view.hostedGraph = _graph;
 }
 

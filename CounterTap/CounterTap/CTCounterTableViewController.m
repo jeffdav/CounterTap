@@ -28,7 +28,9 @@
 
 - (void)styleCounterCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
 - (void)styleOptionsCell:(UITableViewCell*)cell atIndex:(NSInteger)index;
+- (void)styleActionCell:(UITableViewCell *)cell atIndex:(NSInteger)index;
 - (void)handleOption:(NSInteger)option;
+- (void)handleAction:(NSInteger)option;
 
 - (void)addItemWasTapped:(id)sender;
 - (void)doneItemWasTapped:(id)sender;
@@ -64,6 +66,7 @@ typedef void (^ConfirmBlock)(NSInteger option);
 
 enum {
     CTCounterView_CounterSection,
+    CTCounterView_ActionsSection,
     CTCounterView_OptionsSection,
 
     CTCounterView_SectionCount
@@ -71,12 +74,17 @@ enum {
 
 enum {
     CTCounterView_OptionSort,
-    CTCounterView_OptionExport,
-    CTCounterView_Graph,
     CTCounterView_OptionResetAll,
     CTCounterView_OptionRemoveAll,
 
     CTCounterView_OptionsCount
+};
+
+enum {
+    CTCounterView_ActionExport,
+    CTCounterView_ActionGraph,
+
+    CTCounterView_ActionCount
 };
 
 enum {
@@ -191,17 +199,23 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
         case CTCounterView_OptionSort:
             cell.textLabel.text = @"Sort...";
             break;
-        case CTCounterView_OptionExport:
-            cell.textLabel.text = @"Export...";
-            break;
-        case CTCounterView_Graph:
-            cell.textLabel.text = @"Graph...";
-            break;
         case CTCounterView_OptionResetAll:
-            cell.textLabel.text = @"Reset All...";
+            cell.textLabel.text = @"Reset All";
             break;
         case CTCounterView_OptionRemoveAll:
-            cell.textLabel.text = @"Remove All...";
+            cell.textLabel.text = @"Remove All";
+            break;
+    }
+}
+
+- (void)styleActionCell:(UITableViewCell *)cell atIndex:(NSInteger)index {
+    switch (index) {
+        case CTCounterView_ActionExport:
+            cell.textLabel.text = @"Export...";
+            break;
+        case CTCounterView_ActionGraph:
+            cell.textLabel.text = @"Graph";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
     }
 }
@@ -256,22 +270,29 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             }];
             break;
 
-        case CTCounterView_Graph: {
+        case CTCounterView_OptionSort:
+            [self pickSortType];
+            break;
+
+        default:
+            break;
+    }
+}
+
+- (void)handleAction:(NSInteger)option {
+    switch (option) {
+        case CTCounterView_ActionGraph: {
             CTGraphViewController* graphController = [[[CTGraphViewController alloc] initWithCounters:_items] autorelease];
             [self.navigationController pushViewController:graphController animated:YES];
             break;
         }
 
-        case CTCounterView_OptionExport:
+        case CTCounterView_ActionExport:
             if ([MFMailComposeViewController canSendMail]) {
                 [self pickExportType];
             } else {
                 [[[[UIAlertView alloc] initWithTitle:@"No e-mail configured." message:@"Export is done via e-mail. Please configure an e-mail account and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
             }
-            break;
-
-        case CTCounterView_OptionSort:
-            [self pickSortType];
             break;
 
         default:
@@ -307,7 +328,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 #pragma mark Exporting
 
 - (void)pickExportType {
-    _optionPendingConfirm = CTCounterView_OptionExport;
+    _optionPendingConfirm = CTCounterView_ActionExport;
     UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"Export format?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"JSON", @"CSV", nil] autorelease];
     [sheet showFromRect:self.tableView.frame inView:self.view animated:YES];
 }
@@ -445,9 +466,9 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
         Block_release(_blockPendingConfirm);
         _blockPendingConfirm = nil;
         _optionPendingConfirm = 0;
-    } else if (_optionPendingConfirm == CTCounterView_OptionExport) {
+    } else if (_optionPendingConfirm == CTCounterView_ActionExport && buttonIndex != actionSheet.cancelButtonIndex) {
         [self doExport:buttonIndex - actionSheet.firstOtherButtonIndex];
-    } else if (_optionPendingConfirm == CTCounterView_OptionSort) {
+    } else if (_optionPendingConfirm == CTCounterView_OptionSort && buttonIndex != actionSheet.cancelButtonIndex) {
         [self doSort:buttonIndex - actionSheet.firstOtherButtonIndex];
     }
 }
@@ -462,6 +483,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     switch (section) {
         case CTCounterView_CounterSection: return @"Counters";
         case CTCounterView_OptionsSection: return @"Options";
+        case CTCounterView_ActionsSection: return @"Actions";
         default: return nil;
     }
 }
@@ -481,6 +503,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     switch (section) {
         case CTCounterView_CounterSection: return [_items count];
         case CTCounterView_OptionsSection: return CTCounterView_OptionsCount;
+        case CTCounterView_ActionsSection: return CTCounterView_ActionCount;
         default: return 0;
     }
 }
@@ -488,11 +511,13 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *counterCellId = @"CTCounterCellId";
     static NSString *optionCellId = @"CTCounterCellOption";
+    static NSString *actionCellId = @"CTCounterCellAction";
     UITableViewCell *cell = nil;
 
     switch (indexPath.section) {
         case CTCounterView_CounterSection: cell = [tableView dequeueReusableCellWithIdentifier:counterCellId]; break;
         case CTCounterView_OptionsSection: cell = [tableView dequeueReusableCellWithIdentifier:optionCellId]; break;
+        case CTCounterView_ActionsSection: cell = [tableView dequeueReusableCellWithIdentifier:actionCellId]; break;
     }
 
     if (cell == nil) {
@@ -506,6 +531,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             }
 
             case CTCounterView_OptionsSection:
+            case CTCounterView_ActionsSection:
                 cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:optionCellId] autorelease];
                 break;
         }
@@ -514,6 +540,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
     switch (indexPath.section) {
         case CTCounterView_CounterSection: [self styleCounterCell:cell atIndex:indexPath.row]; break;
         case CTCounterView_OptionsSection: [self styleOptionsCell:cell atIndex:indexPath.row]; break;
+        case CTCounterView_ActionsSection: [self styleActionCell:cell atIndex:indexPath.row]; break;
     }
     return cell;
 }
@@ -571,6 +598,10 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
         case CTCounterView_OptionsSection:
             [self handleOption:indexPath.row];
+            break;
+
+        case CTCounterView_ActionsSection:
+            [self handleAction:indexPath.row];
             break;
 
         default:
