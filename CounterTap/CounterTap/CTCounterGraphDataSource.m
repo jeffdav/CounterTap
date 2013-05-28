@@ -50,7 +50,8 @@
     CTCounter* ctr = (id)[_data objectAtIndex:counter];
 
     // Cache this mapping for easy lookup later.
-    [_idMap setObject:[NSNumber numberWithInt:counter] forKey:ctr.title];
+    // TODO(jeff): Oh snap, what if two have the same title?
+    [_idMap setObject:[NSNumber numberWithInt:counter] forKey:ctr.title ? ctr.title : @""];
 
     return ctr.title;
 }

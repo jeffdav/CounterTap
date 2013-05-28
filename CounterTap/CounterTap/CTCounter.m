@@ -28,7 +28,7 @@ NSString* const CTTap_TimeKey = @"CTTapTimeKey";
     return [NSString stringWithFormat:@"{ \"time\": %f }", _time];
 }
 
-#pragma mark - NSCoder
+#pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
@@ -95,6 +95,8 @@ NSString* const CTCounter_TapsKey = @"CTCounterTapsKey";
     [_taps removeLastObject];
 }
 
+#pragma mark - JSON
+
 - (NSDictionary*)asDictionary {
     NSMutableArray* array = [NSMutableArray arrayWithCapacity:[_taps count]];
     for (CTTap* tap in _taps) {
@@ -102,6 +104,8 @@ NSString* const CTCounter_TapsKey = @"CTCounterTapsKey";
     }
     return @{ @"title" : _title, @"count" : @([_taps count]), @"taps" : array };
 }
+
+#pragma mark - CSV
 
 + (NSString*)headerForCSV {
     return @"Title,Count\r\n";
@@ -111,7 +115,7 @@ NSString* const CTCounter_TapsKey = @"CTCounterTapsKey";
     return [NSString stringWithFormat:@"%@,%d\r\n", _title, self.count];
 }
 
-#pragma mark - NSCoder
+#pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {

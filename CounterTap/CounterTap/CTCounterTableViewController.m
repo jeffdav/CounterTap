@@ -98,7 +98,7 @@ enum {
 
 enum {
     CTCounterView_JSONExportType,
-    CTCounterView_CSVExportType,
+    // CTCounterView_CSVExportType,
 
     CTCounterView_ExportTypeCount
 };
@@ -329,7 +329,7 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
 
 - (void)pickExportType {
     _optionPendingConfirm = CTCounterView_ActionExport;
-    UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"Export format?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"JSON", @"CSV", nil] autorelease];
+    UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"Export format?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"JSON", /*@"CSV",*/ nil] autorelease];
     [sheet showFromRect:self.tableView.frame inView:self.view animated:YES];
 }
 
@@ -349,16 +349,16 @@ NSString* const CTDefaults_ItemsKey = @"CTDefaults_ItemsKey";
             break;
         }
 
-        case CTCounterView_CSVExportType: {
-            __block NSMutableString* string = [[[NSMutableString alloc] initWithString:[CTCounter headerForCSV]] autorelease];
-            [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                [string appendString:[obj asRowForCSV]];
-            }];
-            exportData = [string dataUsingEncoding:NSUTF8StringEncoding];
-            mimeType = @"text/csv; header=present";
-            fileName = @"export.csv";
-            break;
-        }
+        //case CTCounterView_CSVExportType: {
+        //    __block NSMutableString* string = [[[NSMutableString alloc] initWithString:[CTCounter headerForCSV]] autorelease];
+        //    [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //        [string appendString:[obj asRowForCSV]];
+        //    }];
+        //    exportData = [string dataUsingEncoding:NSUTF8StringEncoding];
+        //    mimeType = @"text/csv; header=present";
+        //    fileName = @"export.csv";
+        //    break;
+        //}
     }
 
     MFMailComposeViewController* controller = [[[MFMailComposeViewController alloc] init] autorelease];

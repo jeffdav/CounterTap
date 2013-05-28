@@ -22,6 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.navigationItem.title = @"CounterTap!";
 }
 
 - (void)didReceiveMemoryWarning {

@@ -9,6 +9,7 @@
 #import "CTAppDelegate.h"
 
 #import "CTCounterTableViewController.h"
+#import "CTSheetNameTableViewController.h"
 
 @implementation CTAppDelegate
 
@@ -27,9 +28,12 @@
     UINavigationController* rootController = [[[UINavigationController alloc] init] autorelease];
     self.window.rootViewController = rootController;
 
-    CTCounterTableViewController* counterTableViewController = [[[CTCounterTableViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
-    [rootController pushViewController:counterTableViewController animated:NO];
-    
+//    CTCounterTableViewController* counterTableViewController = [[[CTCounterTableViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
+//    [rootController pushViewController:counterTableViewController animated:NO];
+
+    CTSheetNameTableViewController* sheetController = [[[CTSheetNameTableViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
+    [rootController pushViewController:sheetController animated:NO];
+
     return YES;
 }
 
